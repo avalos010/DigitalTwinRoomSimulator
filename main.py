@@ -1,33 +1,36 @@
 import streamlit as st
 import time
 from models import Room
+import asyncio
+from streamlit_autorefresh import st_autorefresh
 
-room = Room("Living Room")
+# Initialize session state for the room
+if "room" not in st.session_state:
+    st.session_state.room = Room("Living Room")
+room = st.session_state.room
 
 st.title("🏠 Smart Home Digital Twin")
-placeholder = st.empty()
 
-lock_button = st.button("Lock Door", key="lock")
-heater_button = st.button("Toggle Heater", key="heater")
-ac_button = st.button("Toggle AC", key="ac")
-lights_button = st.button("Toggle Lights", key="lights")
+st_autorefresh(interval=1000, key="data_refresh")
 
-while True: 
-    room.update()
-    with placeholder.container():
-        st.metric("Room Temp", f"{room.temperature:.1f} °C")
-        st.text(f"Heater is {'ON' if room.heater_on else 'OFF'}")
-        st.text(f"AC is {'ON' if room.ac_on else 'OFF'}")
-        st.text(f"Light is {'ON' if room.lights_on else 'OFF'}")
-        st.text(f"Door is {'LOCKED' if room.door_status == 'locked' else 'UNLOCKED'}")
+# Device control buttons
+if st.button("Toggle Heater"):
+    room.toggle_heater()
+if st.button("Toggle AC"):
+    room.toggle_ac()
+if st.button("Toggle Lights"):
+    room.toggle_lights()
+if st.button("Lock/Unlock Door"):
+    if room.door_status == "locked":
+        room.unlock_door()
+    else:
+        room.lock_door()
 
-        if lock_button:
-            room.lock_door()
-        if heater_button:
-            room.toggle_heater()
-        if ac_button:
-            room.toggle_ac()
-        if lights_button:
-            room.toggle_lights()
+room.update()
 
-    time.sleep(1)
+# Display current status
+st.metric("Room Temp", f"{room.temperature:.1f} °C")
+st.write(f"Heater: {'ON' if room.heater_on else 'OFF'}")
+st.write(f"AC: {'ON' if room.ac_on else 'OFF'}")
+st.write(f"Light: {'ON' if room.lights_on else 'OFF'}")
+st.write(f"Door: {'UNLOCKED' if room.door_status == 'unlocked' else 'LOCKED'}")

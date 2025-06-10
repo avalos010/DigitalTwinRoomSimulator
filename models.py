@@ -13,29 +13,40 @@ class Room:
         # Random fluctuation
         self.temperature += random.uniform(-0.5, 0.5)
 
-        # Simple behavior: turn heater on if temp < 20
+        # turn heater on if temp < 20
         if self.temperature < 20:
-            self.heater_on = True
-            self.temperature += 0.3  # heater effect
+            self.toggle_heater()  
+            self.temperature += 0.3 
         elif self.temperature > 26:
-            self.ac_on = True #AC effect
+            self.temperature -= 0.3
+            self.toggle_ac()
         else:
             self.heater_on = False
             self.ac_on = False
 
     def toggle_lights(self):
-        #turn on if off and off if on
+        print('Lights have been toggled', self.lights_on)
         self.lights_on = not self.lights_on
 
     def lock_door(self):
         self.door_status = "locked"
+        print('Door has been locked', self.door_status)
+
 
     def unlock_door(self):
         self.door_status = "unlocked"
+        print('Door has been unlocked', self.door_status)
+
 
     def toggle_ac(self):
+        if self.heater_on:
+            self.toggle_heater()
         self.heater_on = False
         self.ac_on = not self.ac_on
+        print('AC has been toggled', self.ac_on)
+
     def toggle_heater(self):
-        self.ac_on = False
+        if self.ac_on:
+            self.toggle_ac()
         self.heater_on = not self.heater_on
+        print('Heater has been toggled', self.heater_on)
