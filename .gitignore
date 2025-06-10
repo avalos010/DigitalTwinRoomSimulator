@@ -1,0 +1,17 @@
+# Virtual environment folder
+venv/
+
+# Bytecode cache folders
+__pycache__/
+*.py[cod]
+
+# Streamlit local files
+.streamlit/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor configs (optional, add yours)
+.vscode/
+.idea/
