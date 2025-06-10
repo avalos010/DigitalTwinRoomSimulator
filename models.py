@@ -8,21 +8,23 @@ class Room:
         self.ac_on = False
         self.lights_on = False
         self.door_status = "locked"
+        self.auto_temp=False
 
     def update(self):
         # Random fluctuation
         self.temperature += random.uniform(-0.5, 0.5)
 
+        if(self.auto_temp):
         # turn heater on if temp < 20
-        if self.temperature < 20:
-            self.toggle_heater()  
-            self.temperature += 0.3 
-        elif self.temperature > 26:
-            self.temperature -= 0.3
-            self.toggle_ac()
-        else:
-            self.heater_on = False
-            self.ac_on = False
+            if self.temperature < 20:
+                self.toggle_heater()  
+                self.temperature += 0.3 
+            elif self.temperature > 26:
+                self.temperature -= 0.3
+                self.toggle_ac()
+            else:
+                self.heater_on = False
+                self.ac_on = False
 
     def toggle_lights(self):
         print('Lights have been toggled', self.lights_on)
@@ -50,3 +52,6 @@ class Room:
             self.toggle_ac()
         self.heater_on = not self.heater_on
         print('Heater has been toggled', self.heater_on)
+
+    def toggle_auto_temp(self):
+        self.auto_temp = not self.auto_temp
